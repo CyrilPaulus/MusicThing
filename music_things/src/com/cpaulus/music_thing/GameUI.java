@@ -203,7 +203,7 @@ public class GameUI {
 	public void draw(EntityCamera cam) {		
 		_stage.act(Gdx.graphics.getDeltaTime());
 		_stage.draw();
-		Table.drawDebug(_stage);
+		//Table.drawDebug(_stage);
 	}
 	
 	public void setSelectedCell(Cell cell) {

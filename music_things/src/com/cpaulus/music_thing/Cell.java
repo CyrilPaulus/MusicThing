@@ -68,11 +68,12 @@ public class Cell {
 		if(_selected)
 			_selectedSprite.draw(batch);
 		
-		float startX = _sprite.getX() + _sprite.getWidth() - 5 - _font.getBounds(_text).width ;
-		float startY = _sprite.getY() + 55;
-		
-			
-		_font.draw(batch, _text, startX, startY);
+		if(_text.length() > 0) {
+			float startX = _sprite.getX() + _sprite.getWidth() - 5 - _font.getBounds(_text).width;
+			float startY = _sprite.getY() + 55;		
+				
+			_font.draw(batch, _text, startX, startY);
+		}
 	}
 	
 	public int getX() {
