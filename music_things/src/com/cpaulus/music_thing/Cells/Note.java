@@ -36,6 +36,16 @@ public class Note extends Cell {
 									new Color(99/255.f  ,0   ,178/255.f ,255),
 									};
 	
+	public void addPitch(int amount) {
+		n += amount;
+		int index;
+		if(n >= 0)
+			index = (n + 3) % 12;
+		else
+			index = (n + (-n / 12 + 1) * 12 + 3) % 12;
+		
+		_sprite.setColor(COLORS[index]);
+	}
 	
 	public void up() {
 		n++;

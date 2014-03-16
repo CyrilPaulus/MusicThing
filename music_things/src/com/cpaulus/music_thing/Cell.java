@@ -1,20 +1,22 @@
 package com.cpaulus.music_thing;
 
 
+import static com.cpaulus.music_thing.Cell._font;
+
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.cpaulus.music_thing.Cells.Note;
 import com.cpaulus.music_thing.Cells.NoteDeleter;
-import com.cpaulus.music_thing.Cells.NoteDown;
 import com.cpaulus.music_thing.Cells.NoteGenerator;
 import com.cpaulus.music_thing.Cells.NotePlayer;
 import com.cpaulus.music_thing.Cells.NoteRotator;
 import com.cpaulus.music_thing.Cells.NoteSplitter;
-import com.cpaulus.music_thing.Cells.NoteUp;
+import com.cpaulus.music_thing.Cells.NotePitch;
 
 public class Cell {
 
@@ -26,6 +28,9 @@ public class Cell {
 	protected World _world;
 	private int _posX = 0;
 	private int _posY = 0;
+	private boolean _selected = false;
+	protected String _text = "";
+	static BitmapFont _font = new BitmapFont(Gdx.files.internal("data/default.fnt")); 
 	
 	public enum Type {
 		EMPTY,
@@ -34,16 +39,19 @@ public class Cell {
 		PLAYER,
 		SPLITTER,
 		ROTATOR,
-		UP,
-		DOWN,
+		PITCH,
 		DELETER
 	}
 	
 	protected Sprite _sprite;
+	protected Sprite _selectedSprite;
 	
 	protected Cell(World w) {		
 		 _sprite = new Sprite(new Texture(Gdx.files.internal("data/empty.png")));
+		 _selectedSprite = new Sprite(new Texture(Gdx.files.internal("data/select.png")));
 		 _sprite.setOrigin(CELL_WIDTH / 2.f, CELL_HEIGHT / 2.f);
+		 _selectedSprite.setOrigin(CELL_WIDTH / 2.f, CELL_HEIGHT / 2.f);
+		 
 		 _type = Type.EMPTY;
 		 _world = w;
 	}
@@ -52,10 +60,19 @@ public class Cell {
 		_posX = x;
 		_posY = y;
 		_sprite.setPosition(x * CELL_WIDTH, y * CELL_HEIGHT);
+		_selectedSprite.setPosition(x * CELL_WIDTH, y * CELL_HEIGHT);
 	}
 	
 	public void draw(SpriteBatch batch) {
 		_sprite.draw(batch);
+		if(_selected)
+			_selectedSprite.draw(batch);
+		
+		float startX = _sprite.getX() + _sprite.getWidth() - 5 - _font.getBounds(_text).width ;
+		float startY = _sprite.getY() + 55;
+		
+			
+		_font.draw(batch, _text, startX, startY);
 	}
 	
 	public int getX() {
@@ -87,11 +104,8 @@ public class Cell {
 		case ROTATOR:
 			c = new NoteRotator(world);
 			break;
-		case DOWN:
-			c = new NoteDown(world);
-			break;
-		case UP:
-			c = new NoteUp(world);
+		case PITCH:
+			c = new NotePitch(world);
 			break;
 		case DELETER:
 			c = new NoteDeleter(world);
@@ -128,6 +142,14 @@ public class Cell {
 	public boolean consume(Cell c) {
 		return false;
 
+	}
+	
+	public void setSelected(boolean value) {
+		_selected = value;
+	}
+	
+	public boolean isSelected() {
+		return _selected;
 	}
 
 

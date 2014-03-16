@@ -98,8 +98,6 @@ public class InputController implements InputProcessor, GestureListener {
 	public boolean tap(float x, float y, int count, int button) {
 		
 		Vector2 uiPos = _uiCam.UiToWorld(new Vector2(x, y));
-		if(_gameUI.click(uiPos.x, uiPos.y))		
-			return true;
 		
 		Vector2 pos = getCellPos(x, y);
 		int i = 0;
@@ -110,10 +108,17 @@ public class InputController implements InputProcessor, GestureListener {
 		while(i < c.size() && c.get(i) instanceof Note)
 			i++;
 		
-		if(i < c.size())
-			c.get(i).rotate();
-		else 
-			_world.addCell(_gameUI.getType(), (int)pos.x, (int)pos.y);		
+		if(i < c.size()) {
+			Cell cell = c.get(i);
+			if(cell.isSelected())
+				cell.rotate();
+			_gameUI.setSelectedCell(cell);
+			
+		}
+		else {
+			Cell cell = _world.addCell(_gameUI.getType(), (int)pos.x, (int)pos.y);
+			_gameUI.setSelectedCell(cell);
+		}
 				
 		return true;
 	}
@@ -133,8 +138,10 @@ public class InputController implements InputProcessor, GestureListener {
 	public boolean longPress(float x, float y) {
 		Vector2 pos = getCellPos(x, y);
 		ArrayList<Cell> c = _world.getCells((int)pos.x, (int)pos.y);
-		for(Cell a : c)
+		for(Cell a : c) {
 			_world.removeCell(a);
+			_gameUI.setSelectedCell(null);
+		}
 		return true;
 	}
 
