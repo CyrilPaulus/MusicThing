@@ -3,6 +3,7 @@ package com.cpaulus.music_thing;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,11 +28,10 @@ public class GameScreen implements Screen {
 		int h = Gdx.graphics.getHeight();
 
 		_camera = new EntityCamera(w, h);
-		_uiCam = new EntityCamera(w, h);
-		
-		_ui = new GameUI(w, h);
+		_uiCam = new EntityCamera(w, h);			
 		
 		_world = new World();
+		_ui = new GameUI(w, h, _world);
 		
 		_ic = new InputController(_world, _camera, _ui, _uiCam);
 		InputMultiplexer mult = new InputMultiplexer();
@@ -39,6 +39,10 @@ public class GameScreen implements Screen {
 		mult.addProcessor(_ic);
 		mult.addProcessor(new GestureDetector(_ic));
 	    Gdx.input.setInputProcessor(mult);
+	    
+	    FileHandle file = Gdx.files.local("save.txt");
+	    if(file.exists())
+	    	_world.Load(file);
 	}
 
 	@Override
@@ -84,8 +88,17 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-
+		int w = Gdx.graphics.getWidth();
+		int h = Gdx.graphics.getHeight();
+		
+		_ui = new GameUI(w, h, _world);		
+	
+		_ic = new InputController(_world, _camera, _ui, _uiCam);
+		InputMultiplexer mult = new InputMultiplexer();
+		mult.addProcessor(_ui.getStage());
+		mult.addProcessor(_ic);
+		mult.addProcessor(new GestureDetector(_ic));
+		Gdx.input.setInputProcessor(mult);
 	}
 
 	@Override

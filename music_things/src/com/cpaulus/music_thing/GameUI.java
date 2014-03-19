@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import sun.nio.cs.ext.ISCII91;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,7 +35,8 @@ public class GameUI {
 	
 	
 	//For my cool UI
-	private Stage _stage;	
+	private Stage _stage;
+	private World _world;
 
 	private int _width;
 	private int _height;
@@ -45,6 +47,7 @@ public class GameUI {
 	
 	ImageButton _btPlus = CreatePanelButton("data/plus.png");
 	ImageButton _btMinus = CreatePanelButton("data/minus.png");
+	ImageButton _btSave = CreatePanelButton("data/save.png");
 	
 	private ArrayList<Cell.Type> _types;
 	
@@ -113,8 +116,9 @@ public class GameUI {
 
 	}
 	
-	public GameUI(int width,int height) {
+	public GameUI(int width,int height,World w) {
 		
+		_world = w;
 		_btPlus.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -126,6 +130,16 @@ public class GameUI {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				DecParameter();
+			}
+		});
+		
+		_btSave.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+
+				FileHandle file = Gdx.files.local("save.txt");
+				_world.Save(file);
+				
 			}
 		});
 				
@@ -158,6 +172,7 @@ public class GameUI {
 		table.row();
 		table.add().expandY();
 		table.row();
+		table.add(_btSave);
 		
 		table.center().bottom();
 						
@@ -233,14 +248,14 @@ public class GameUI {
 	
 	private void IncParameter() {
 		IHasParameter instance = (IHasParameter)_selectedCell;
-		instance.setParamater(instance.getParameter() + 1);	
+		instance.setParameter(instance.getParameter() + 1);	
 		String val = "" + instance.getParameter();
 		SetText(_field, _font, val);
 	}
 	
 	private void DecParameter() {
 		IHasParameter instance = (IHasParameter)_selectedCell;
-		instance.setParamater(instance.getParameter() - 1);
+		instance.setParameter(instance.getParameter() - 1);
 		String val = "" + instance.getParameter();
 		SetText(_field, _font, val);
 	}

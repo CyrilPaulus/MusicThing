@@ -153,6 +153,9 @@ public class Cell {
 		return _selected;
 	}
 
+	public Type GetType() {
+		return _type;
+	}
 
 }
 

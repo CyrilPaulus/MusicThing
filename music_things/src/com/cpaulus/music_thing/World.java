@@ -7,12 +7,15 @@ import java.util.LinkedList;
 import org.omg.stub.java.rmi._Remote_Stub;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.cpaulus.music_thing.Cell.Type;
+import com.cpaulus.music_thing.Cells.IHasParameter;
 import com.cpaulus.music_thing.Cells.Note;
+import com.cpaulus.music_thing.Cells.NoteDeleter;
 import com.cpaulus.music_thing.Cells.NoteGenerator;
 import com.cpaulus.music_thing.Cells.NotePlayer;
 
@@ -142,4 +145,34 @@ public class World {
 		
 	}
 
+	public void Save(FileHandle file) {
+		StringBuilder sb = new StringBuilder();
+		
+		for(Cell c : _cells) {
+			sb.append(c.GetType().toString() + " " + c.getX() + " " + c.getY() + " " + c.getRotation());
+			if(c instanceof IHasParameter) {
+				sb.append(" " + ((IHasParameter)c).getParameter());
+			}
+			sb.append("\n");
+		}
+		file.writeString(sb.toString(), false);
+	}
+	
+	public void Load(FileHandle file) {
+		_cells.clear();
+		_notes.clear();
+		
+		for(String line : file.readString().split("\n")) {
+			System.out.println(line);
+			String[] data = line.split(" ");
+			Type t = Type.valueOf(data[0]);
+			int x = Integer.parseInt(data[1]);
+			int y = Integer.parseInt(data[2]);
+			int rot = Integer.parseInt(data[3]);
+			Cell c = addCell(t, x, y);
+			c.setRotation(rot);
+			if(c instanceof IHasParameter) 
+				((IHasParameter)c).setParameter(Integer.parseInt(data[4]));
+		}
+	}
 }

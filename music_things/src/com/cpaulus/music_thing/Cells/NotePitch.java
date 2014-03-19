@@ -20,7 +20,7 @@ public class NotePitch extends Cell implements IHasParameter {
 		_sprite = new Sprite(new Texture(Gdx.files.internal("data/pitch.png")));
 		 _sprite.setOrigin(CELL_WIDTH / 2.f, CELL_HEIGHT / 2.f);
 		 _type = Type.PITCH;
-		 setParamater(1);
+		 setParameter(1);
 	}
 	
 	public boolean consume(Cell c) {
@@ -39,7 +39,7 @@ public class NotePitch extends Cell implements IHasParameter {
 	}
 
 	@Override
-	public void setParamater(int param) {
+	public void setParameter(int param) {
 		_amount = param;
 		
 		if(_amount > 0)

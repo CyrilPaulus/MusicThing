@@ -18,7 +18,7 @@ public class NoteSplitter extends Cell implements IHasParameter {
 		_sprite = new Sprite(new Texture(Gdx.files.internal("data/splitter.png")));
 		 _sprite.setOrigin(CELL_WIDTH / 2.f, CELL_HEIGHT / 2.f);
 		 _type = Type.SPLITTER;
-		 setParamater(1);
+		 setParameter(1);
 	}
 	
 	public boolean consume(Cell c) {
@@ -40,7 +40,7 @@ public class NoteSplitter extends Cell implements IHasParameter {
 	}
 
 	@Override
-	public void setParamater(int param) {
+	public void setParameter(int param) {
 		_count = 1;
 		if(param >= 1)
 			_tresh = param;
